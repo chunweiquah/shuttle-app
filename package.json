@@ -2,7 +2,7 @@
   "name": "sensor-integration-PWA",
   "version": "1.0.0",
   "description": "",
-  "main": "service-worker.js",
+  "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="x-ua-compatible" content="ie-edge">
+        <meta name="description" content="Sensor Integration with Progressive Web Apps">
+        <title>Plexus Shuttle Service</title>
+
+        <link rel="manifest" href="/manifest.json">
+
+        <link rel = "stylesheet" href = "https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-pink.min.css">
+        <script src = "https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>
+        <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link href="https://cdn.mapfit.com/v2-4/assets/css/mapfit.css" rel='stylesheet' />
+        <script src="resources/material-design-light/material.min.js"></script>
+
+        <meta name="apple-mobile-web-app-title" content="Shuttle">
+        <meta name="application-name" content="Shuttle">
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes>
+
+        <link rel="apple-touch-icon" sizes="60x60" href="/icons/apple-touch-icon-60x60.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-touch-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-touch-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-touch-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon-180x180.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="192x192" href="/icons/android-chrome-192x192.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+        <link rel="manifest" href="/icons/site.webmanifest">
+        <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#f44336">
+
+    
+        <meta name="msapplication-TileColor" content="#ffc40d">
+        <meta name="msapplication-TileImage" content="/icons/mstile-144x144.png">
+        <meta name="theme-color" content="#ffffff">
+        <style>
+            @media screen and (min-width: 480px) {
+                .sites{font-size:24px;}
+                .infoShuttle{font-size:16px;}
+            }
+            @media screen and (max-width: 375px) {
+                .sites{font-size:10px;}
+                .infoShuttle{font-size:8px;}
+            }
+            .blinkingText {
+                animation: blinker 2s linear infinite;
+            }
+            @keyframes blinker {  
+                50% { opacity: 0; }
+            }
+        </style>
+    </head>
+    <body style="height:100%">
+        <div class = "mdl-layout mdl-js-layout mdl-layout--fixed-header">
+            <header class = "mdl-layout__header" style="background-color:#c20d2e;z-index: 0;">
+                <div class = "mdl-layout__header-row">      
+                    <span class = "mdl-layout-title">Plexus Shuttle Service</span>          
+                </div>       
+            </header>
+            <div class = "mdl-layout__drawer">
+                <span class = "mdl-layout-title"  style="z-index: 1">Menu</span>
+                <nav class = "mdl-navigation"  style="z-index: 1">
+                    <a class = "mdl-navigation__link" href = "">Home</a>
+                    <a class = "mdl-navigation__link" href = "">Shuttle</a>    
+                </nav>
+            </div>
+            <div id="mapfit" style="width: 100%; height:90%;z-index: 0"></div>    
+            <div style="width: 100%; height:20%;z-index: 0">
+                <div style="float:left; width:50%;height:100%">
+                    <div id="islandViewETA" style="float:left; width:50%;height:100%;">                   
+                            <table>
+                                <tr>
+                                    <td class="sites blinkingText" style="font-family: 'Courier New', Courier, monospace;font-weight: bold; color:#c20d2e; width:340px;text-align:center">
+                                        IslandView(arriving) 
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="infoShuttle" id="eta1" style="font-family: 'Courier New', Courier, monospace; color:darkslategrey; width:340px;text-align:center">                                       
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="infoShuttle" id="remain1" style="font-family: 'Courier New', Courier, monospace; color:darkslategrey; width:340px;text-align:center">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="infoShuttle" id="distance1" style="font-family: 'Courier New', Courier, monospace; color:darkslategrey; width:340px;text-align:center">
+                                    </td>
+                                </tr>
+                            </table>
+                    </div>
+                    <div id="seasideETA" style="float:right; width:50%;height:100%;">
+                            <table>
+                                    <tr>
+                                        <td class="sites" style="font-family: 'Courier New', Courier, monospace;font-weight: bold; color:darkslategrey; width:340px;text-align:center">
+                                            SeaSide 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="infoShuttle" id="eta2" style="font-family: 'Courier New', Courier, monospace; color:darkslategrey; width:340px;text-align:center">                                  
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="infoShuttle" id="remain2" style="font-family: 'Courier New', Courier, monospace; color:darkslategrey; width:340px;text-align:center">                                   
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="infoShuttle" id="distance2" style="font-family: 'Courier New', Courier, monospace; color:darkslategrey; width:340px;text-align:center">
+                                        </td>
+                                    </tr>
+                                </table>
+                    </div>
+                </div>
+                <div style="float:right; width:50%;height:100%">
+                    <div id="hillSideETA" style="float:left; width:50%;height:100%;">
+                            <table>
+                                    <tr>
+                                        <td class="sites" style="font-family: 'Courier New', Courier, monospace;font-weight: bold; color:darkslategrey; width:340px;text-align:center">
+                                            HillSide 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="infoShuttle" id="eta3"  style="font-family: 'Courier New', Courier, monospace; color:darkslategrey; width:340px;text-align:center">                                
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="infoShuttle" id="remain3" style="font-family: 'Courier New', Courier, monospace; color:darkslategrey; width:340px;text-align:center">                      
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="infoShuttle" id="distance3" style="font-family: 'Courier New', Courier, monospace; color:darkslategrey; width:340px;text-align:center">                               
+                                        </td>
+                                    </tr>
+                                </table>
+                    </div>
+                    <div id="riverSideETA" style="float:right; width:50%;height:100%;">
+                            <table>
+                                    <tr>
+                                        <td class="sites" style="font-family: 'Courier New', Courier, monospace;font-weight: bold; color:darkslategrey; width:340px;text-align:center">
+                                            RiverSide 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="infoShuttle" id="eta4" style="font-family: 'Courier New', Courier, monospace; color:darkslategrey; width:340px;text-align:center">                                   
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="infoShuttle" id="remain4" style="font-family: 'Courier New', Courier, monospace; color:darkslategrey; width:340px;text-align:center">                      
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="infoShuttle" id="distance4" style="font-family: 'Courier New', Courier, monospace; color:darkslategrey; width:340px;text-align:center">                               
+                                        </td>
+                                    </tr>
+                                </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.mapfit.com/v2-4/assets/js/tetragon.js"></script>
+        <script src="https://cdn.mapfit.com/v2-4/assets/js/mapfit.js"></script>
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script>
+            mapfit.apikey = "591dccc4e499ca0001a4c6a41280c42478ab439595f8068ddb4b6d27";
+            let key = "591dccc4e499ca0001a4c6a41280c42478ab439595f8068ddb4b6d27"
+            let map = mapfit.MapView('mapfit', {theme: 'day'})
+    
+                let directionsReq = new mapfit.Directions(key, "https://api.mapfit.com/v2");   
+                let encodedRoute;         
+                let pointsArray
+
+                let obj;
+               
+                var sitesArr = [[5.3167, 100.2966], [5.3057, 100.2960], [5.3025, 100.2956], [5.3122, 100.2826], [5.3167, 100.2966]];
+
+                var latitudeArr = [5.3167, 5.3057, 5.3025, 5.3122, 5.3167];
+                var longitudeArr = [100.2966, 100.2960, 100.2956, 100.2826, 100.2966];
+                var dateObj = new Date();
+                var dateObjMiddle = new Date();
+                var distanceTravelled = 0;
+
+                var i = 0;
+                while(i < 4){
+                    let startMarkerIcon = mapfit.Icon();
+                    startMarkerIcon.setIconUrl('commercial');
+
+                    //start marker and location
+                    let startMarker = mapfit.Marker(sitesArr[i]);
+                    startMarker.setIcon(startMarkerIcon);
+                    map.addMarker(startMarker)
+                    let startLatLng = mapfit.LatLng(latitudeArr[i], longitudeArr[i]);
+
+                    //end marker and location
+                    let endMarker = mapfit.Marker(sitesArr[i+1]);
+                    map.addMarker(endMarker)
+                    let endLatLng = mapfit.LatLng(latitudeArr[i+1], longitudeArr[i+1]);
+
+
+                    //custom plexus shuttle marker and location
+                    let myCustomIcon = mapfit.Icon();
+                    myCustomIcon.setIconUrl('https://connect.plexus.com/sites/IT/dev/Images1/PlexShuttle.png');
+                    myCustomIcon.setWidth(40);
+                    myCustomIcon.setHeight(40);
+                    let marker = mapfit.Marker([5.311693, 100.293796]);
+                    marker.setIcon(myCustomIcon);
+                    map.addMarker(marker);
+                    let middleLatLng = mapfit.LatLng(5.311693, 100.293796);
+
+
+                    if(i == 0){
+                        directionsReq.route(startLatLng, middleLatLng, 'driving')
+                        .then(function(data) {
+                            encodedRoute = data.trip.legs[0].shape;
+                            pointsArray = decodePolyline(encodedRoute)
+                            let directionPolyline = mapfit.Polyline(pointsArray)
+                            map.addPolyline(directionPolyline)
+                            map.setCenterWithLayer(directionPolyline, 10, 40);
+                            dateObjMiddle.setTime(dateObjMiddle.getTime() + data.trip.summary.time*1000);
+                        }).then(function(){
+                            directionsReq.route(startLatLng, endLatLng, 'driving')
+                            .then(function(data) {
+                                encodedRoute = data.trip.legs[0].shape;
+                                pointsArray = decodePolyline(encodedRoute)
+                                let directionPolyline = mapfit.Polyline(pointsArray)
+                                map.addPolyline(directionPolyline)
+                                map.setCenterWithLayer(directionPolyline, 10, 40);
+                                //directionPolyline.setFillColor('#4353FF')
+                                directionPolyline.setStrokeColor('rgb(228, 89, 147)')
+                                dateObj.setTime(dateObj.getTime() + data.trip.summary.time*1000);
+                                distanceTravelled = Math.round((data.trip.summary.length)*1.60934);
+                            }).then(function(){
+                                document.getElementById('eta1').innerHTML = 'ETA: '+ dateObj.getHours()+':'+(dateObj.getMinutes()<10?'0':'') + dateObj.getMinutes();
+                                document.getElementById('remain1').innerHTML = 'Remaining: ' + Math.round((dateObj - dateObjMiddle)/60000) + ' minutes';
+                                document.getElementById('distance1').innerHTML = 'Distance: ' + distanceTravelled + ' km';
+                                //i++;
+                            });
+                        })
+                    }
+                    else if(i==1){
+                        setTimeout(function() {
+                            directionsReq.route(startLatLng, endLatLng, 'driving')
+                            .then(function(data) {
+                                encodedRoute = data.trip.legs[0].shape;
+                                pointsArray = decodePolyline(encodedRoute)
+                                let directionPolyline = mapfit.Polyline(pointsArray)
+                                map.addPolyline(directionPolyline)
+                                map.setCenterWithLayer(directionPolyline, 10, 40);
+                                directionPolyline.setStrokeColor('rgba(255, 255, 255, 0.5)')
+                                distanceTravelled = Math.round((data.trip.summary.length)*1.60934);
+                                dateObj.setTime(dateObj.getTime() + data.trip.summary.time*1000);
+                            }).then(function(){
+                                var dateDummy = new Date();
+                                document.getElementById('eta2').innerHTML = 'ETA: '+ dateObj.getHours()+':'+(dateObj.getMinutes()<10?'0':'') + dateObj.getMinutes();
+                                document.getElementById('remain2').innerHTML = 'Remaining: ' + Math.round((dateObj - dateDummy)/60000) + ' minutes';
+                                document.getElementById('distance2').innerHTML = 'Distance: ' + distanceTravelled + ' km';
+                                //i++;
+                            });
+                        },2000);
+                    }
+                    else if(i==2){
+                        setTimeout(function() {
+                            directionsReq.route(startLatLng, endLatLng, 'driving')
+                            .then(function(data) {
+                                encodedRoute = data.trip.legs[0].shape;
+                                pointsArray = decodePolyline(encodedRoute)
+                                let directionPolyline = mapfit.Polyline(pointsArray)
+                                map.addPolyline(directionPolyline)
+                                map.setCenterWithLayer(directionPolyline, 10, 40);
+                                directionPolyline.setStrokeColor('rgba(255, 255, 255, 0.5)')
+                                distanceTravelled = Math.round((data.trip.summary.length)*1.60934);
+                                dateObj.setTime(dateObj.getTime() + data.trip.summary.time*1000);
+                            }).then(function(){
+                                var dateDummy = new Date();
+                                document.getElementById('eta3').innerHTML = 'ETA: '+ dateObj.getHours()+':'+(dateObj.getMinutes()<10?'0':'') + dateObj.getMinutes();
+                                document.getElementById('remain3').innerHTML = 'Remaining: ' + Math.round((dateObj - dateDummy)/60000) + ' minutes';
+                                document.getElementById('distance3').innerHTML = 'Distance: ' + distanceTravelled + ' km';
+                                //i++;
+                            });
+                        },2000);
+                    }
+                    else if(i==3){
+                        setTimeout(function() {
+                            directionsReq.route(startLatLng, endLatLng, 'driving')
+                            .then(function(data) {
+                                encodedRoute = data.trip.legs[0].shape;
+                                pointsArray = decodePolyline(encodedRoute)
+                                let directionPolyline = mapfit.Polyline(pointsArray)
+                                map.addPolyline(directionPolyline)
+                                map.setCenterWithLayer(directionPolyline, 10, 40);
+                                directionPolyline.setStrokeColor('rgba(255, 255, 255, 0.5)')
+                                distanceTravelled = Math.round((data.trip.summary.length)*1.60934);
+                                dateObj.setTime(dateObj.getTime() + data.trip.summary.time*1000);
+                            }).then(function(){
+                                var dateDummy = new Date();
+                                document.getElementById('eta4').innerHTML = 'ETA: '+ dateObj.getHours()+':'+(dateObj.getMinutes()<10?'0':'') + dateObj.getMinutes();
+                                document.getElementById('remain4').innerHTML = 'Remaining: ' + Math.round((dateObj - dateDummy)/60000) + ' minutes';
+                                document.getElementById('distance4').innerHTML = 'Distance: ' + distanceTravelled + ' km';
+                                //i++;
+                            });
+                        },2000);
+                    }
+                    i++;
+                }
+            
+                function decodePolyline(encoded) {
+                    let polyLineArrayCompiled = [];
+                    var index = 0,
+                        len = encoded.length;
+                    var lat = 0,
+                        lng = 0;
+                    while (index < len) {
+                        var b, shift = 0,
+                            result = 0;
+                        do {
+                            b = encoded.charAt(index++).charCodeAt(0) - 63;
+                            result |= (b & 0x1f) << shift;
+                            shift += 5;
+                        } while (b >= 0x20);
+    
+                        var dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+                        lat += dlat;
+                        shift = 0;
+                        result = 0;
+    
+                        do {
+                            b = encoded.charAt(index++).charCodeAt(0) - 63;
+                            result |= (b & 0x1f) << shift;
+                            shift += 5;
+                        } while (b >= 0x20);
+                        var dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+                        lng += dlng;
+    
+                        polyLineArrayCompiled.push([(lat / 1E6), (lng / 1E6)])
+                    }
+                return polyLineArrayCompiled
+                }
+        </script>
+         <script src="scripts/app.js" async></script> 
+    </body>
+</html>
